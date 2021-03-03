@@ -7,7 +7,8 @@ class App extends React.Component {
 	}
 	commitChange = value => {
 		this.setState({
-			query: value
+			query: value,
+			resultProducts: this.state.products.filter(v => v.title.includes(value))
 		})
 	}
 	componentDidMount() {
@@ -90,11 +91,7 @@ class Products extends React.Component {
 	render() {
 		return (
 			<div className="list-wrapper">
-				{
-					this.props.products.map(v => {
-						return <Product value={v} key={v.id+'_'+v.title}/>
-					})
-				}
+				{ this.props.products.map(v => <Product value={v} key={v.id+'_'+v.title}/>) }
 			</div>
 		)
 	}
