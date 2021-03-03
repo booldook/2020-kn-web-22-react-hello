@@ -24,10 +24,12 @@ class App extends React.Component {
 		})
 	}
 	render() {
+		let { query, resultProducts } = this.state 
 		return (
 			<div className="container">
-				<TitleBar query={this.state.query} className="my-4" />
+				<TitleBar query={query} className="my-4" />
 				<Search onChange={this.commitChange} />
+				<Products products={resultProducts} />
 			</div>
 		)
 	}
@@ -82,5 +84,41 @@ class Search extends React.Component {
 		)
 	}
 }
+
+/**************** Products ******************/
+class Products extends React.Component {
+	render() {
+		return (
+			<div className="list-wrapper">
+				{
+					this.props.products.map(v => {
+						return <Product value={v} key={v.id+'_'+v.title}/>
+					})
+				}
+			</div>
+		)
+	}
+}
+
+/**************** Product ******************/
+class Product extends React.Component {
+	render() {
+		let { src, title, price } = this.props.value
+		return (
+			<div className="list">
+				<div className="img-wrap">
+					<img src={src} className="w-100"/>
+				</div>
+				<div className="title">{title}</div>
+				<div className="price">${price}</div>
+			</div>
+		)
+	}
+}
+
+
+
+
+
 
 ReactDOM.render(<App />, document.getElementById('app'))
