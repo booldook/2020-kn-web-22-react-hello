@@ -1,18 +1,33 @@
 /**************** App ******************/
 class App extends React.Component {
 	state = {
-		query: ''
+		query: '',
+		products: [],
+		resultProducts: []
 	}
-	handleChange = value => {
+	commitChange = value => {
 		this.setState({
 			query: value
+		})
+	}
+	componentDidMount() {
+		axios.get('../json/products.json')
+		.then(r => {
+			this.setState({
+				products: r.data,
+				resultProducts: r.data,
+			})
+			console.log(this.state.products)
+		})
+		.catch(e => {
+			console.log(e)
 		})
 	}
 	render() {
 		return (
 			<div className="container">
 				<TitleBar query={this.state.query} className="my-4" />
-				<Search onChange={this.handleChange} />
+				<Search onChange={this.commitChange} />
 			</div>
 		)
 	}
@@ -36,13 +51,33 @@ class TitleBar extends React.Component {
 
 /**************** Search ******************/
 class Search extends React.Component {
+	state = {
+		query: ''
+	}
+	inputRef = React.createRef() // DOM을 품는 변수가 되어라
 	handleChange = e => {
-		this.props.onChange(e.target.value)
+		this.onChange(e.target.value)
+	}
+	handleRemove = e => {
+		this.onChange('')
+		// ref는 current로 접근하여야 한다.
+		this.inputRef.current.focus()
+	}
+	onChange = value => {
+		this.props.onChange(value)
+		this.setState({
+			query: value
+		})
 	}
 	render() {
 		return (
 			<form className="form-search">
-				<input className="form-control" type="text" onChange={this.handleChange} autoFocus />
+				<input className="form-control py-2" type="text" onChange={this.handleChange} autoFocus value={this.state.query} ref={this.inputRef /* 나를 inputRef에 담아라 */} />
+				{
+					this.state.query.length > 0
+					? <i className="fa fa-times-circle bt-remove" onClick={this.handleRemove} />
+					: ''
+				}
 			</form>
 		)
 	}
