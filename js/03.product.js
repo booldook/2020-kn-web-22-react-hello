@@ -1,24 +1,23 @@
 /**************** App ******************/
 class App extends React.Component {
+	products = []
 	state = {
 		query: '',
-		products: [],
 		resultProducts: []
 	}
 	commitChange = value => {
 		this.setState({
 			query: value,
-			resultProducts: this.state.products.filter(v => v.title.includes(value))
+			resultProducts: this.products.filter(v => v.title.includes(value))
 		})
 	}
 	componentDidMount() {
 		axios.get('../json/products.json')
 		.then(r => {
 			this.setState({
-				products: r.data,
 				resultProducts: r.data,
 			})
-			console.log(this.state.products)
+			this.products = r.data
 		})
 		.catch(e => {
 			console.log(e)
